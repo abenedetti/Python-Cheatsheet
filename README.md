@@ -20,16 +20,16 @@ The companion of R-Cheatsheet. :smile:
 `from sklearn.ensemble import RandomForestRegressor`<br>
 
 #### *Split into validation and training data*
-train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
+`train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)`
 
 #### *Specify Model*
-tree_model = DecisionTreeRegressor(random_state=1)
+`tree_model = DecisionTreeRegressor(random_state=1)`
 
-rf_model = RandomForestRegressor(random_state=1)
+`rf_model = RandomForestRegressor(random_state=1)`
 
 #### *Fit Model with train data*
-a_model.fit(train_X, train_y)
+`a_model.fit(train_X, train_y)`
 
 #### *Make validation predictions and calculate mean absolute error*
-val_predictions = a_model.predict(val_X)
-val_mae = mean_absolute_error(val_predictions, val_y)
+`val_predictions = a_model.predict(val_X)`
+`val_mae = mean_absolute_error(val_predictions, val_y)`
