@@ -24,6 +24,7 @@ train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
 
 #### *Specify Model*
 tree_model = DecisionTreeRegressor(random_state=1)
+
 rf_model = RandomForestRegressor(random_state=1)
 
 #### *Fit Model with train data*
