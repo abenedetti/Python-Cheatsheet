@@ -137,3 +137,26 @@ The companion of R-Cheatsheet. :smile:
 `        ('cat', categorical_transformer, categorical_cols)`<br>
 `    ])`<br>
 
+**Step 2: Define the Model**<br>
+`from sklearn.ensemble import RandomForestRegressor`<br>
+`model = RandomForestRegressor(n_estimators=100, random_state=0)`<br>
+
+**Step 3: Create and Evaluate the Pipeline**<br>
+`from sklearn.metrics import mean_absolute_error`<br>
+
+*Bundle preprocessing and modeling code in a pipeline*`<br>
+`my_pipeline = Pipeline(steps=[('preprocessor', preprocessor),`<br>
+`                              ('model', model)`<br>
+`                             ])`<br>
+
+*Preprocessing of training data, fit model*<br>
+`my_pipeline.fit(X_train, y_train)`<br>
+
+*Preprocessing of validation data, get predictions*<br>
+`preds = my_pipeline.predict(X_valid)`<br>
+
+*Evaluate the model*<br>
+`score = mean_absolute_error(y_valid, preds)`<br>
+`print('MAE:', score)`<br>
+
+
