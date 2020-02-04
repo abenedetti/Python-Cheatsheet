@@ -10,7 +10,7 @@ The companion of R-Cheatsheet. :smile:
 `min(a_dict, key=a_dict.get)`
 <br>
 
-### 2) Basic machine learning toolbox (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
+### 2) Basic machine learning toolbox (from [Kaggle mini course](https://www.kaggle.com/learn/intro-to-machine-learning))
 
 #### *Load libraries*
 `import pandas as pd`<br>
@@ -34,7 +34,7 @@ The companion of R-Cheatsheet. :smile:
 `val_predictions = a_model.predict(val_X)`
 `val_mae = mean_absolute_error(val_predictions, val_y)`
 
-### 3) Dealing with missing values (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
+### 3) Dealing with missing values (from [Kaggle mini course](https://www.kaggle.com/alexisbcook/missing-values))
 
 **Get names of columns with missing values**<br>
 `cols_with_missing = [col for col in X_train.columns if X_train[col].isnull().any()]`
@@ -74,7 +74,7 @@ The companion of R-Cheatsheet. :smile:
 `imputed_X_train_plus.columns = X_train_plus.columns`<br>
 `imputed_X_valid_plus.columns = X_valid_plus.columns`<br>
 
-### 3) Dealing with categorical variables (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
+### 3) Dealing with categorical variables (from [Kaggle mini course](https://www.kaggle.com/alexisbcook/categorical-variables))
 
 **Approach 1 (Drop Categorical Variables)**<br>
 `drop_X_train = X_train.select_dtypes(exclude=['object'])`<br>
@@ -113,7 +113,7 @@ The companion of R-Cheatsheet. :smile:
 `OH_X_train = pd.concat([num_X_train, OH_cols_train], axis=1)`<br>
 `OH_X_valid = pd.concat([num_X_valid, OH_cols_valid], axis=1)`<br>
 
-### 4) Dealing with pipelines (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
+### 4) Dealing with pipelines (from [Kaggle mini course](https://www.kaggle.com/alexisbcook/pipelines))
 
 **Step 1: Define Preprocessing Steps**<br>
 `from sklearn.compose import ColumnTransformer`<br>
@@ -158,5 +158,44 @@ The companion of R-Cheatsheet. :smile:
 *Evaluate the model*<br>
 `score = mean_absolute_error(y_valid, preds)`<br>
 `print('MAE:', score)`<br>
+
+### 5) Cross-validation (from [Kaggle mini course](https://www.kaggle.com/alexisbcook/cross-validation))
+
+`#Set pipeline`<br>
+`from sklearn.ensemble import RandomForestRegressor`<br>
+`from sklearn.pipeline import Pipeline`<br>
+`from sklearn.impute import SimpleImputer`<br>
+
+`my_pipeline = Pipeline(steps=[('preprocessor', SimpleImputer()),`<br>
+`                              ('model', RandomForestRegressor(n_estimators=50,`<br>
+`                                                              random_state=0))`<br>
+`                             ])`<br>
+                             
+`#Determine cross validation score`<br>                 
+`from sklearn.model_selection import cross_val_score`<br>
+
+`*Multiply by -1 since sklearn calculates *negative* MAE*`<br>
+`scores = -1 * cross_val_score(my_pipeline, X, y,`<br>
+`                              cv=5,`<br>
+`                              scoring='neg_mean_absolute_error')`<br>
+
+`print("MAE scores:\n", scores)`<br>
+
+### 6) Gradient boosting (from [Kaggle mini course](https://www.kaggle.com/alexisbcook/xgboost))
+
+`#Base model`<br>
+`from xgboost import XGBRegressor`<br>
+`my_model = XGBRegressor()`<br>
+`my_model.fit(X_train, y_train)`<br>
+
+`from sklearn.metrics import mean_absolute_error`<br>
+`predictions = my_model.predict(X_valid)`<br>
+
+`#Parameters tuning`<br>
+`my_model = XGBRegressor(n_estimators=1000, learning_rate=0.05, n_jobs=4)`<br>
+`my_model.fit(X_train, y_train,`<br>
+`             early_stopping_rounds=5,`<br> 
+`             eval_set=[(X_valid, y_valid)],`<br>
+`             verbose=False)`<br>
 
 
