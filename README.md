@@ -34,9 +34,8 @@ The companion of R-Cheatsheet. :smile:
 `val_predictions = a_model.predict(val_X)`
 `val_mae = mean_absolute_error(val_predictions, val_y)`
 
-### 3) Intermediate machine learning toolbox (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
+### 3) Dealing with missing values (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
 
-#### *Missing values*
 **Get names of columns with missing values**<br>
 `cols_with_missing = [col for col in X_train.columns if X_train[col].isnull().any()]`
 
@@ -75,8 +74,66 @@ The companion of R-Cheatsheet. :smile:
 `imputed_X_train_plus.columns = X_train_plus.columns`<br>
 `imputed_X_valid_plus.columns = X_valid_plus.columns`<br>
 
+### 3) Dealing with categorical variables (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
 
+**Approach 1 (Drop Categorical Variables)**<br>
+`drop_X_train = X_train.select_dtypes(exclude=['object'])`<br>
+`drop_X_valid = X_valid.select_dtypes(exclude=['object'])`<br>
 
+**Approach 2 (Label Encoding)**<br>
+`from sklearn.preprocessing import LabelEncoder`<br>
 
+*Make copy to avoid changing original data*<br> 
+`label_X_train = X_train.copy()`<br>
+`label_X_valid = X_valid.copy()`<br>
 
+*Apply label encoder to each column with categorical data*<br>
+`label_encoder = LabelEncoder()`<br>
+`for col in object_cols:`<br>
+`    label_X_train[col] = label_encoder.fit_transform(X_train[col])`<br>
+`    label_X_valid[col] = label_encoder.transform(X_valid[col])`<br>
+
+**Approach 3 (One-Hot Encoding)**<br>
+`from sklearn.preprocessing import OneHotEncoder`<br>
+
+*Apply one-hot encoder to each column with categorical data*<br>
+`OH_encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)`<br>
+`OH_cols_train = pd.DataFrame(OH_encoder.fit_transform(X_train[object_cols]))`<br>
+`OH_cols_valid = pd.DataFrame(OH_encoder.transform(X_valid[object_cols]))`<br>
+
+*One-hot encoding removed index; put it back*<br>
+`OH_cols_train.index = X_train.index`<br>
+`OH_cols_valid.index = X_valid.index`<br>
+
+*Remove categorical columns (will replace with one-hot encoding)*<br>
+`num_X_train = X_train.drop(object_cols, axis=1)`<br>
+`num_X_valid = X_valid.drop(object_cols, axis=1)`<br>
+
+*Add one-hot encoded columns to numerical features*<br>
+`OH_X_train = pd.concat([num_X_train, OH_cols_train], axis=1)`<br>
+`OH_X_valid = pd.concat([num_X_valid, OH_cols_valid], axis=1)`<br>
+
+### 4) Dealing with pipelines (from [Kaggle mini course](https://www.kaggle.com/learn/overview))
+
+**Step 1: Define Preprocessing Steps**<br>
+`from sklearn.compose import ColumnTransformer`<br>
+`from sklearn.pipeline import Pipeline`<br>
+`from sklearn.impute import SimpleImputer`<br>
+`from sklearn.preprocessing import OneHotEncoder`<br>
+
+*Preprocessing for numerical data*<br>
+`numerical_transformer = SimpleImputer(strategy='constant')`<br>
+
+*Preprocessing for categorical data*<br>
+`categorical_transformer = Pipeline(steps=[`<br>
+`    ('imputer', SimpleImputer(strategy='most_frequent')),`<br>
+`    ('onehot', OneHotEncoder(handle_unknown='ignore'))`<br>
+`])`<br>
+
+*Bundle preprocessing for numerical and categorical data*<br>
+`preprocessor = ColumnTransformer(`<br>
+`    transformers=[`<br>
+`        ('num', numerical_transformer, numerical_cols),`<br>
+`        ('cat', categorical_transformer, categorical_cols)`<br>
+`    ])`<br>
 
